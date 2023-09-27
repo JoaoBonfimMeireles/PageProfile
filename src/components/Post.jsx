@@ -1,53 +1,56 @@
-import { Avatar } from './Avatar';
-import style from './Post.module.css';
-import { Comment } from './comment';
+import { Avatar } from "./Avatar";
+import style from "./Post.module.css";
+import { Comment } from "./comment";
 
-export function Post() {
-    return(
-        <article className={style.post}>
-            <header>
-                <div className={style.author}>
-                    <Avatar src="https://github.com/JoaoBonfimMeireles.png" alt="João meireles" />
-                    <div className={style.authorInfo}>
-                        <strong>João Meires</strong>
-                        <span>Web Developer</span>
-                    </div>
-                </div>
-                
-                <time title="2023-07-16 01:18:00" dateTime="2023-07-16 01:18:00">Publicado há 1h
-                </time>
-            </header>
-            
-            <div className={style.content}>
-                <p>Fala galeraa 👋</p>
+export function Post({ author, publisedAt, content }) {
+  const dateTimePublisedAt = new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(publisedAt);
 
-                <p>Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀</p>
+  return (
+    <article className={style.post}>
+      <header>
+        <div className={style.author}>
+          <Avatar src={author.avatarUrl} alt={author.name} />
+          <div className={style.authorInfo}>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
+          </div>
+        </div>
 
-               <p>👉{' '}<a href="#">jane.design/doctorcare</a> </p>
+        <time title="2023-07-16 01:18:00" dateTime="2023-07-16 01:18:00">
+          {dateTimePublisedAt}
+        </time>
+      </header>
 
-                <p>
-                    <a href="#">#novoprojeto</a>{' '} 
-                    <a href="">#nlw</a>{' '} 
-                    <a href="">#rocketseat</a></p>
-            </div>
+      <div className={style.content}>
+        {content.map(list => {
+            if (list.type === 'paragraph') {
+                return <p>{list.content}</p>;
+            } else if (list.type === 'link'){
+                return <p><a href="#">{list.content}</a></p>;
+            }
+        })}
+      </div>
 
-            <form className={style.commentForm}>
-                <strong>Deixe seu feeback</strong>
+      <form className={style.commentForm}>
+        <strong>Deixe seu feeback</strong>
 
-                <textarea 
-                placeholder="Deixei seu comentario"
-                />
+        <textarea placeholder="Deixei seu comentario" />
 
-                <footer>
-                    <button type="submit">Publicar</button>
-                </footer>
-            </form>
+        <footer>
+          <button type="submit">Publicar</button>
+        </footer>
+      </form>
 
-            <div className={style.commentList}>
-                 <Comment />
-                 <Comment />
-                 <Comment />
-            </div>
-        </article>
-    )
+      <div className={style.commentList}>
+        <Comment />
+        <Comment />
+        <Comment />
+      </div>
+    </article>
+  );
 }

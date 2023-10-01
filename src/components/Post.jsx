@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Avatar } from "./Avatar";
 import style from "./Post.module.css";
 import { Comment } from "./comment";
@@ -5,10 +6,31 @@ import { Comment } from "./comment";
 export function Post({ author, publisedAt, content }) {
   const dateTimePublisedAt = new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
-    month: "long",
+    month: "short",
     hour: "2-digit",
     minute: "2-digit",
   }).format(publisedAt);
+
+  const [comments, setComments] = useState(["Post muito bacana, em!"]);
+
+  const [newCommentText, SetNewCommentText] = useState("");
+
+  function handleNewCommentChange() {
+    SetNewCommentText(event.target.value)
+  }
+
+  function handleCreateNewComment() {
+    event.preventDefault();
+
+    //const newCommentText = event
+
+    //console.log (event.target.nameComment.value);
+    //const newComment = (event.target.nameComment.value);
+
+    setComments([...comments, newCommentText]);
+    SetNewCommentText('')
+    //event.target.nameComment.value = "";
+  }
 
   return (
     <article className={style.post}>
@@ -27,19 +49,23 @@ export function Post({ author, publisedAt, content }) {
       </header>
 
       <div className={style.content}>
-        {content.map(list => {
-            if (list.type === 'paragraph') {
-                return <p>{list.content}</p>;
-            } else if (list.type === 'link'){
-                return <p><a href="#">{list.content}</a></p>;
-            }
+        {content.map((list) => {
+          if (list.type === "paragraph") {
+            return <p>{list.content}</p>;
+          } else if (list.type === "link") {
+            return (
+              <p>
+                <a href="#">{list.content}</a>
+              </p>
+            );
+          }
         })}
       </div>
 
-      <form className={style.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={style.commentForm}>
         <strong>Deixe seu feeback</strong>
 
-        <textarea placeholder="Deixei seu comentario" />
+        <textarea value={newCommentText} onChange={handleNewCommentChange} name="nameComment" placeholder="Deixei seu comentario" />
 
         <footer>
           <button type="submit">Publicar</button>
@@ -47,9 +73,9 @@ export function Post({ author, publisedAt, content }) {
       </form>
 
       <div className={style.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment) => {
+          return <Comment content={comment} />;
+        })}
       </div>
     </article>
   );

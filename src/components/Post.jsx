@@ -16,7 +16,8 @@ export function Post({ author, publisedAt, content }) {
   const [newCommentText, SetNewCommentText] = useState("");
 
   function handleNewCommentChange() {
-    SetNewCommentText(event.target.value)
+    event.target.setCustomValidity("")
+    SetNewCommentText(event.target.value);
   }
 
   function handleCreateNewComment() {
@@ -28,8 +29,20 @@ export function Post({ author, publisedAt, content }) {
     //const newComment = (event.target.nameComment.value);
 
     setComments([...comments, newCommentText]);
-    SetNewCommentText('')
+    SetNewCommentText("");
     //event.target.nameComment.value = "";
+  }
+
+  function handleNewCommentInvalid() {
+    event.target.setCustomValidity("Esse campo é obrigatório")
+    //console.log(event)
+  }
+
+  function deleteComment(commentToDelete) {
+    const commentWithoutDeleteOne = comments.filter((comment) => {
+      return comment !== commentToDelete;
+    });
+    setComments(commentWithoutDeleteOne);
   }
 
   return (
@@ -51,10 +64,10 @@ export function Post({ author, publisedAt, content }) {
       <div className={style.content}>
         {content.map((list) => {
           if (list.type === "paragraph") {
-            return <p>{list.content}</p>;
+            return <p key={list.content}>{list.content}</p>;
           } else if (list.type === "link") {
             return (
-              <p>
+              <p key={list.content}>
                 <a href="#">{list.content}</a>
               </p>
             );
@@ -65,7 +78,14 @@ export function Post({ author, publisedAt, content }) {
       <form onSubmit={handleCreateNewComment} className={style.commentForm}>
         <strong>Deixe seu feeback</strong>
 
-        <textarea value={newCommentText} onChange={handleNewCommentChange} name="nameComment" placeholder="Deixei seu comentario" />
+        <textarea
+          required={true}
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+          name="nameComment"
+          onInvalid={handleNewCommentInvalid}
+          placeholder="Deixei seu comentario"
+        />
 
         <footer>
           <button type="submit">Publicar</button>
@@ -74,7 +94,13 @@ export function Post({ author, publisedAt, content }) {
 
       <div className={style.commentList}>
         {comments.map((comment) => {
-          return <Comment content={comment} />;
+          return (
+            <Comment
+              onDeleteComment={deleteComment}
+              key={comment}
+              content={comment}
+            />
+          );
         })}
       </div>
     </article>

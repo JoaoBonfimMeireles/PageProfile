@@ -98,6 +98,7 @@ export function Post({ author, publisedAt, content }) {
         {comments.map((comment) => {
           return (
             <Comment
+              
               onDeleteComment={deleteComment}
               key={comment}
               content={comment}

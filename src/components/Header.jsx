@@ -7,7 +7,7 @@ console.log(igniteLogo);
 export function Header() {
     return (
         <header className={styles.header}>
-            <img src={igniteLogo} alt="Logo do Ignite" />
+            <img src={igniteLogo} alt="Logo do Ignite" /> <h1>Page Profile</h1>
         </header>
     );
 }
